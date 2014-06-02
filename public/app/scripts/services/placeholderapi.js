@@ -11,10 +11,7 @@ placeholderServices.factory('Placeholder', ['$q', '$rootScope', '$interval', fun
 
     var pongCallback = {};
 
-    // TODO: Move this into constructor / DI?
-    // Create our websocket object with the address to the websocket
-    //var url = 'ws://' + window.location.host + '/socket';
-    var url = 'ws://localhost:8080/socket';
+    var url = 'websocketurl';
     var ws = new WebSocket(url);
 
     ws.onopen = function(){
