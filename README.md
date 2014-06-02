@@ -37,13 +37,13 @@ View your Web front end by visiting ```http://localhost:8080/``` in your favouri
 
 You will want to change the name of files/folders from 'placeholder' to the name of your app. If you have the 'rename' command, this is the quickest way forward (```brew install rename``` if you don't have it and are running Mac OSX):
 
-   find . -type d -iname '*sitemap*' -depth -exec rename 's@sitemap@<your app name in lower-case>@gi' {} +
-   find . -type f -iname '*sitemap*' -depth -exec rename 's@sitemap@<your app name in lower-case>@gi' {} +
+    find . -type d -iname '*sitemap*' -depth -exec rename 's@placeholder@<your app name in lower-case>@gi' {} +
+    find . -type f -iname '*sitemap*' -depth -exec rename 's@placeholder@<your app name in lower-case>@gi' {} +
 
 Then a quick update to the files themselves:
 
-   find . -type f | xargs sed -i 's/sitemap/<your app name in lower-case>/g'
-   find . -type f | xargs sed -i 's/sitemap/<your app name in UpperCamelCase>/g'
+    find . -type f | xargs sed -i 's/placeholder/<your app name in lower-case>/g'
+    find . -type f | xargs sed -i 's/placeholder/<your app name in UpperCamelCase>/g'
 
 Alternatively, you can change them manually yourself.
 
