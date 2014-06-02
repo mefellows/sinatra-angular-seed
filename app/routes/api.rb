@@ -47,6 +47,7 @@ module Placeholder
           if !request.websocket?
             JSON::generate({'data' => {}, 'error' => 'Invalid WebSocket request'})
           else
+            response_obj = {'data' => {}, 'message' => 'Invalid Request'}
             request.websocket do |ws|
               ws.onopen do
                 warn("socket opened")
@@ -57,17 +58,20 @@ module Placeholder
                   json_msg = JSON.parse(msg)
 
                   # Do not remove the 'pong' response
-                  pong = checkPong(msg)
+                  # TODO: move this into an abstraction somewhere so it's hidden
+                  pong = checkPong(json_msg)
                   if (!pong.nil?)
-                    return pong
-                  end
+                    response_obj = pong
+                  elsif
 
-                  # Play with request/responses
-                  if (json_msg['message'] == 'foo')
-                    response_obj = {'message' => 'bar'}
-                  else
-                    # Do something with json_msg
-                    response_obj = {'message' => json_msg['message']}
+                    # Play with request/responses
+                    if (json_msg['message'] == 'foo')
+                      response_obj = {'message' => 'bar'}
+                    else
+                      # Do something with json_msg
+                      response_obj = {'message' => json_msg['message']}
+                    end
+
                   end
 
                   # Send a response
@@ -88,8 +92,9 @@ module Placeholder
         # Override this for custom behaviour.
         #
         def checkPong(msg)
-          puts "Checking ping pong for: " + msg
+          log.debug("Checking ping pong for a ping: " + msg['message'])
           if (msg['message'] == 'ping')
+            log.debug("Ping hit!")
             response_obj = {'message' => 'pong'}
           end
         end
