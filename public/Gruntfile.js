@@ -15,6 +15,8 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
+    grunt.loadNpmTasks('grunt-text-replace');;
+
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -23,6 +25,31 @@ module.exports = function (grunt) {
             // configurable paths
             app: require('./bower.json').appPath || 'app',
             dist: 'dist'
+        },
+
+        replace: {
+            socket_url_test: {
+                src: ['app/scripts/*.js', 'app/scripts/services/*.js', 'app/scripts/controllers/*.js'],
+                overwrite: true,                 // overwrite matched source files
+                replacements: [{
+                    from: 'websocketurl',
+                    to: 'ws://localhost:8080/socket'
+                },{
+                    from: "ws://' + window.location.host + '/socket",
+                    to: 'ws://localhost:8080/socket'
+                }]
+            },
+            socket_url_prod: {
+                src: ['app/scripts/*.js', 'app/scripts/services/*.js', 'app/scripts/controllers/*.js'],
+                overwrite: true,                 // overwrite matched source files
+                replacements: [{
+                    from: 'ws://localhost:8080/socket',
+                    to: "ws://' + window.location.host + '/socket"
+                },{
+                    from: 'websocketurl',
+                    to: "ws://' + window.location.host + '/socket"
+                }]
+            }
         },
 
         // Watches files for changes and runs tasks based on the changed files
@@ -415,6 +442,7 @@ module.exports = function (grunt) {
             'concurrent:server',
             'autoprefixer',
             'connect:livereload',
+            'replace:socket_url_test',
             'watch'
         ]);
     });
@@ -435,6 +463,7 @@ module.exports = function (grunt) {
     grunt.registerTask('heroku', [
         'clean:dist',
         'bowerInstall',
+        'replace:socket_url_prod',
         'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
