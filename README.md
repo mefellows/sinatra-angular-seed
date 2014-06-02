@@ -17,7 +17,7 @@ Out of the box, you get:
 
     git clone https://github.com/mefellows/sinatra-angular-seed.git
     cd sinatra-angular-cd
-    bundle install
+    echo 'PORT=8080' > .env && bundle install
     foreman start
 
 Test that we're up:
@@ -29,22 +29,27 @@ All going to plan, you should see ```alive``` indicating the app is running.
 Setup the UI
 
     cd public
-    npm install
-    bower install
-    grunt
-
+    npm install && bower install && grunt
+    grunt serve
+    
 View your Web front end by visiting ```http://localhost:8080/``` in your favourite web browser.
 
-You will want to change the name of files/folders from 'placeholder' to the name of your app. If you have the 'rename' command, this is the quickest way forward (```brew install rename``` if you don't have it and are running Mac OSX):
+You will want to change the name of files/folders from 'placeholder' to the name of your app. If you have the 'rename' command, this is the quickest way forward (```brew install rename``` if you don't have it and are running Mac OSX). Create and run this little helper:
 
-    find . -type d -iname '*sitemap*' -depth -exec rename 's@placeholder@<your app name in lower-case>@gi' {} +
-    find . -type f -iname '*sitemap*' -depth -exec rename 's@placeholder@<your app name in lower-case>@gi' {} +
+vi rename.sh
 
-Then a quick update to the files themselves:
+    #!/bin/bash
+    
+    find . -type f -iname '*placeholder*' | grep -v '\.git' | xargs rename 's@haveaguess@<your app>@gi' {}
+    find . -type d -iname '*placeholder*' | grep -v '\.git' | xargs rename 's@haveaguess@<your app>@gi' {}
+    find . -type f | grep -v '\.git' | xargs sed -i 's/placeholder/<your app>/g'
+    find . -type f | grep -v '\.git' | xargs sed -i 's/Placeholder/<your app in UpperCamelCase>/g'
 
-    find . -type f | xargs sed -i 's/placeholder/<your app name in lower-case>/g'
-    find . -type f | xargs sed -i 's/placeholder/<your app name in UpperCamelCase>/g'
+Add execute perms
 
+    chmod +x rename.sh
+    ./rename.sh
+    
 Alternatively, you can change them manually yourself.
 
 ## Testing
@@ -57,6 +62,7 @@ You will of course need to create an app in Heroku before deployment, a typical 
 
     heroku app:create <my awesome app>
     heroku config:set BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+    heroku labs:enable websockets
     git push heroku master
 
 ## Logging
