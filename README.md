@@ -40,8 +40,8 @@ vi rename.sh
 
     #!/bin/bash
     
-    find . -type f -iname '*placeholder*' | grep -v '\.git' | xargs rename 's@haveaguess@<your app>@gi' {}
-    find . -type d -iname '*placeholder*' | grep -v '\.git' | xargs rename 's@haveaguess@<your app>@gi' {}
+    find . -type f -iname '*placeholder*' | grep -v '\.git' | xargs rename 's@placeholder@<your app>@gi' {}
+    find . -type d -iname '*placeholder*' | grep -v '\.git' | xargs rename 's@placeholder@<your app>@gi' {}
     find . -type f | grep -v '\.git' | xargs sed -i 's/placeholder/<your app>/g'
     find . -type f | grep -v '\.git' | xargs sed -i 's/Placeholder/<your app in UpperCamelCase>/g'
 
